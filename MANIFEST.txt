@@ -1,0 +1,21 @@
+RotorDynX Bearings v1.0.0
+
+Main files
+----------
+RotorDynX_Bearings.m       Unified solver backend
+RotorDynX_Bearings_App.m   MATLAB graphical interface
+README.md                  Project documentation
+CHANGELOG.md               Development history
+RELEASE_NOTES.md           Public release notes
+CITATION.cff               Citation metadata
+
+Folders
+-------
+docs/                       Validation notes
+examples/                   Usage notes / future examples
+images/                     Project images
+
+Not included
+------------
+Development backups, superseded solver revisions, temporary MAT files,
+spreadsheet benchmarks, debug scripts and local machine paths.
