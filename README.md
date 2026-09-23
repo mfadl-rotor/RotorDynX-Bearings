@@ -83,15 +83,14 @@ for every active pad.
 
 ## Dynamic Coefficients
 
-RotorDynX calculates the linearized bearing force coefficients:
+RotorDynX calculates the linearized bearing force coefficients using the standard linearized force model:
 
 $$
-\begin{bmatrix} F_x \\ F_y \end{bmatrix}
-=
--\begin{bmatrix} K_{xx} & K_{xy} \\ K_{yx} & K_{yy} \end{bmatrix}
-\begin{bmatrix} x \\ y \end{bmatrix}
--\begin{bmatrix} C_{xx} & C_{xy} \\ C_{yx} & C_{yy} \end{bmatrix}
-\begin{bmatrix} \dot{x} \\ \dot{y} \end{bmatrix}
+F_x = -(K_{xx}x + K_{xy}y + C_{xx}\dot{x} + C_{xy}\dot{y})
+$$
+
+$$
+F_y = -(K_{yx}x + K_{yy}y + C_{yx}\dot{x} + C_{yy}\dot{y})
 $$
 
 where:
