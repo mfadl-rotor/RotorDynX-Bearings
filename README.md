@@ -86,39 +86,22 @@ for every active pad.
 RotorDynX calculates the linearized bearing force coefficients:
 
 $$
-\begin{bmatrix}
-F_x \\
-F_y
-\end{bmatrix}
+\begin{bmatrix} F_x \\ F_y \end{bmatrix}
 =
--
-\begin{bmatrix}
-K_{xx} & K_{xy}\\
-K_{yx} & K_{yy}
-\end{bmatrix}
-\begin{bmatrix}
-x\\
-y
-\end{bmatrix}
--
-\begin{bmatrix}
-C_{xx} & C_{xy}\\
-C_{yx} & C_{yy}
-\end{bmatrix}
-\begin{bmatrix}
-\dot{x}\\
-\dot{y}
-\end{bmatrix}
+-\begin{bmatrix} K_{xx} & K_{xy} \\ K_{yx} & K_{yy} \end{bmatrix}
+\begin{bmatrix} x \\ y \end{bmatrix}
+-\begin{bmatrix} C_{xx} & C_{xy} \\ C_{yx} & C_{yy} \end{bmatrix}
+\begin{bmatrix} \dot{x} \\ \dot{y} \end{bmatrix}
 $$
 
 where:
 
-- \(K_{xx},K_{yy}\) are direct stiffness coefficients
-- \(K_{xy},K_{yx}\) are cross-coupled stiffness coefficients
-- \(C_{xx},C_{yy}\) are direct damping coefficients
-- \(C_{xy},C_{yx}\) are cross-coupled damping coefficients
+- $K_{xx},K_{yy}$ are direct stiffness coefficients
+- $K_{xy},K_{yx}$ are cross-coupled stiffness coefficients
+- $C_{xx},C_{yy}$ are direct damping coefficients
+- $C_{xy},C_{yx}$ are cross-coupled damping coefficients
 
-For TPJBs, pad degrees of freedom are condensed from the coupled journal-pad dynamic system to obtain an equivalent \(2\times2\) bearing stiffness and damping representation suitable for rotordynamic models.
+For TPJBs, pad degrees of freedom are condensed from the coupled journal-pad dynamic system to obtain an equivalent $2 \times 2$ bearing stiffness and damping representation suitable for rotordynamic models.
 
 ---
 
@@ -194,11 +177,11 @@ These values are provided as an example of the current solver output and should 
 
 RotorDynX also reports dimensionless bearing parameters, including:
 
-- \(L/D\)
-- Relative clearance \(C_b/R\)
+- $L/D$
+- Relative clearance $C_b/R$
 - Sommerfeld number
-- \(h_\mathrm{min}/C_b\)
-- \(P_\mathrm{max}/\bar{P}\)
+- $h_\mathrm{min}/C_b$
+- $P_\mathrm{max}/\bar{P}$
 - Dimensionless stiffness
 - Dimensionless damping
 
@@ -216,9 +199,9 @@ $$
 
 where:
 
-- \(C_b\) = assembled radial clearance
-- \(W\) = bearing load
-- \(\omega\) = shaft angular speed
+- $C_b$ = assembled radial clearance
+- $W$ = bearing load
+- $\omega$ = shaft angular speed
 
 ---
 
