@@ -49,33 +49,33 @@ The TPJB engine includes:
 
 For spherical pivots, each pad may include two rotational degrees of freedom:
 
-\[
+$$
 \alpha_i = \text{circumferential pad tilt}
-\]
+$$
 
-\[
+$$
 \beta_i = \text{axial pad tilt}
-\]
+$$
 
 The static equilibrium conditions are solved from:
 
-\[
+$$
 F_x = F_{x,\mathrm{required}}
-\]
+$$
 
-\[
+$$
 F_y = F_{y,\mathrm{required}}
-\]
+$$
 
 together with the individual pad moment conditions:
 
-\[
+$$
 M_{\alpha,i}=0
-\]
+$$
 
-\[
+$$
 M_{\beta,i}=0
-\]
+$$
 
 for every active pad.
 
@@ -85,7 +85,7 @@ for every active pad.
 
 RotorDynX calculates the linearized bearing force coefficients:
 
-\[
+$$
 \begin{bmatrix}
 F_x \\
 F_y
@@ -109,7 +109,7 @@ C_{yx} & C_{yy}
 \dot{x}\\
 \dot{y}
 \end{bmatrix}
-\]
+$$
 
 where:
 
@@ -180,10 +180,10 @@ Kxy = -3.712835e+00 N/m
 Kyx = -3.712835e+00 N/m
 Kyy = 5.107179e+07 N/m
 
-Cxx = 9.074004e+04 N.s/m
-Cxy = 7.638561e-03 N.s/m
-Cyx = 7.638562e-03 N.s/m
-Cyy = 9.074004e+04 N.s/m
+Cxx = 9.074004e+04 N·s/m
+Cxy = 7.638561e-03 N·s/m
+Cyx = 7.638562e-03 N·s/m
+Cyy = 9.074004e+04 N·s/m
 ```
 
 These values are provided as an example of the current solver output and should not be interpreted as a universal validation case.
@@ -204,15 +204,15 @@ RotorDynX also reports dimensionless bearing parameters, including:
 
 One convention currently used is:
 
-\[
+$$
 K^*=\frac{K C_b}{W}
-\]
+$$
 
 and
 
-\[
+$$
 C^*=\frac{C C_b \omega}{W}
-\]
+$$
 
 where:
 
