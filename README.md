@@ -1,6 +1,4 @@
-<img width="512" height="512" alt="RotorDynX_logo_icon" src="https://github.com/user-attachments/assets/72dd6a55-9bd7-40c4-80c4-ef56788662d6" />
-
-
+<img width="200" height="200" alt="RotorDynX_logo_icon" src="https://github.com/user-attachments/assets/72dd6a55-9bd7-40c4-80c4-ef56788662d6" />
 # RotorDynX Bearings
 
 **RotorDynX Bearings** is a MATLAB-based hydrodynamic bearing analysis tool developed for the static and dynamic analysis of journal bearings and tilting-pad journal bearings (TPJBs).
