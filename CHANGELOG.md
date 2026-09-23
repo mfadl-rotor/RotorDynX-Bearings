@@ -1,13 +1,8 @@
 # Changelog
 
-All notable changes to **RotorDynX Bearings** are documented in this file.
+All notable changes to **RotorDynX Bearings** are documented here.
 
-RotorDynX has evolved through two main development tracks:
-
-- the unified hydrodynamic journal-bearing solver
-- the tilting-pad journal-bearing (TPJB) solver
-
-Version entries below reflect confirmed development milestones. Dates are omitted where they were not formally tagged at the time of development.
+RotorDynX was developed progressively, with each bearing family added and validated as a separate engineering module before being integrated into the unified solver.
 
 ---
 
@@ -17,318 +12,509 @@ Version entries below reflect confirmed development milestones. Dates are omitte
 - External benchmark validation of spherical-pivot TPJB dynamic coefficients
 - Independent finite-difference verification of TPJB stiffness and damping
 - Additional published benchmark cases
-- Improved validation reporting and automated comparison tables
-- Expanded example library and GitHub documentation
+- Expanded example library and validation documentation
+- Improved automated benchmark reporting
 
 ---
 
-# TPJB Development
+# Bearing Development History
 
-## [TPJB v1.4] - Spherical-Pivot Production Solver
+## Plain Journal Bearing
+
+The first RotorDynX bearing model was the conventional plain hydrodynamic journal bearing.
 
 ### Added
-- Spherical-pivot TPJB formulation
-- Two rotational degrees of freedom per pad:
-  - circumferential tilt
-  - axial tilt
-- Coupled pad dynamic coordinates using `alpha + beta`
-- Full static moment equilibrium:
-  - circumferential pad moment = 0
-  - axial pad moment = 0
-- Production single-point solver workflow
-- Unified result structure through `RotorDynXResult`
-- Dimensionless TPJB result reporting
-- Solver timing summary
-- Dynamic matrix conditioning checks
-- Active-pad reporting for dynamic condensation
-
-### Dynamic solver
-- Direct perturbed-Reynolds dynamic coefficient calculation
-- Coupled massless-pad stiffness and damping condensation
-- Cached Reynolds operator/factorization for dynamic sensitivities
-- Frozen steady positive-pressure region during perturbation solution
-- Equivalent 2 × 2 journal stiffness matrix
-- Equivalent 2 × 2 journal damping matrix
-
-### Static solver
-- Nested static TPJB equilibrium:
-  - inner pad-moment solution
-  - outer journal-force equilibrium
-- Warm-started local pad-root solution
-- Full-scan fallback when local pad-root search is not sufficient
-- Force convergence reporting
-- Pad-moment residual reporting
-- Active-pad load threshold handling
-
-### Output
-- Journal eccentricity and attitude
-- Journal center position
-- Individual pad tilt
-- Individual pad load
-- Circumferential and axial pad moments
+- Finite-difference Reynolds-equation solver
+- Journal static equilibrium
+- Pressure-field calculation
+- Oil-film reaction forces
+- Eccentricity ratio
+- Attitude angle
 - Minimum film thickness
-- Pivot film thickness
 - Maximum pressure
-- Maximum pad load
-- Friction power
-- Effective viscosity
-- Full K/C matrices
-- Dimensionless K/C coefficients
-- Runtime breakdown
+- Flow calculation
+- Friction and power-loss calculation
+- Dimensionless operating parameters
 
-### Validation status
-- Static equilibrium converged to production tolerances for current cases
-- Spherical-pivot dynamic formulation implemented
-- External dynamic benchmark validation still in progress
+### Dynamic analysis
+- Initial finite-difference stiffness and damping extraction
+- Direct and cross-coupled K/C coefficients
+- Later upgraded to the direct perturbed-Reynolds formulation
+
+The plain-bearing module became the numerical foundation for the later bearing families.
 
 ---
 
-## [TPJB v1.2] - Coupled Dynamic TPJB Solver
+## Elliptical / Two-Lobe Bearing
+
+The next geometry introduced was the preloaded two-lobe or elliptical bearing.
 
 ### Added
-- Direct perturbed-Reynolds stiffness and damping calculation for TPJBs
-- Coupled massless-pad K/C condensation
-- Journal/pad dynamic coupling
-- Pad-specific preload handling
-- Unified RotorDynX plotting workflow
+- Fixed-lobe geometry framework
+- Two-pad bearing representation
+- Preload definition
+- Pad-center geometry
+- Separate upper and lower lobe film-thickness calculation
+- Generalized fixed-lobe pressure solution
+
+### Development reference
+Early development cases used a two-pad configuration with preload-based geometry, including representative cases around:
+
+- preload `m = 0.5`
+- pivot/lobe angular fraction `alpha = 0.5`
 
 ### Improved
-- TPJB static equilibrium robustness
-- Loaded-pad root detection
-- Idle-pad handling
-- Numerical stability of pad equilibrium
-- Pressure-field storage and post-processing
-
-### Fixed
-- Friction-power integration corrected to use two-dimensional trapezoidal wall-shear integration
-- Previous power integration inconsistency removed
+- Unified geometry generation
+- Force projection from individual lobes
+- Static equilibrium for multi-lobe bearings
+- Dynamic coefficient calculation using the common RotorDynX framework
 
 ---
 
-## [TPJB v1.0 - v1.1] - Production Static TPJB Framework
+## Three-Lobe Journal Bearing
+
+The fixed-lobe engine was then extended to three-pad preloaded bearings.
 
 ### Added
-- Full pad-by-pad Reynolds solution
-- Individual pad load calculation
-- Pad pressure-field calculation
-- Minimum film-thickness calculation
-- Pivot film-thickness calculation
-- Maximum-pressure calculation
-- Static journal equilibrium
-- Individual pad moment equilibrium
-- LBP and LOP pad arrangements
-- Pivot-offset support
-- Pad preload support
-- Active and lightly-loaded pad handling
+- Three-lobe geometry generation
+- Three individual hydrodynamic pressure regions
+- Preloaded multi-lobe film geometry
+- Combined force and moment post-processing
+- Static and dynamic analysis through the unified solver
+
+### Classification
+Three-pad bearings with:
+
+`m > 0`
+
+are identified as:
+
+**Three-Lobe Journal Bearing**
 
 ### Improved
-- Nested equilibrium strategy
-- Force-balance convergence
-- Pad-root search behavior
-- Pad indexing and geometry generation
-- Production output formatting
+- Pad indexing
+- Load-angle handling
+- Multi-lobe pressure integration
+- K/C coefficient consistency
 
 ---
 
-## [TPJB v0.2 and early development]
+## Three-Axial-Groove Bearing
+
+The same multi-pad framework was extended to zero-preload three-pad bearings representing a three-axial-groove configuration.
+
+### Classification
+Three-pad bearings with:
+
+`m = 0`
+
+are identified as:
+
+**Three-Axial-Groove Bearing**
 
 ### Added
-- Initial tilting-pad bearing geometry
-- Initial pad Reynolds solution
-- Pad pivot definition
-- Preliminary pad-tilt solution
-- Initial TPJB result structures
+- Axial-groove bearing geometry
+- Three separated hydrodynamic regions
+- Groove boundary treatment
+- Static equilibrium
+- Dynamic coefficient calculation
 
 ### Fixed
-- Struct initialization issues
-- Non-trivial loaded-root selection
-- Idle-pad root handling
-- Pad-equilibrium initialization
-
-### Extended
-- Line-pivot support
-- Spherical-pivot development path
-- Preparation for coupled dynamic degrees of freedom
+- Bearing-name classification logic was corrected so that:
+  - preloaded 3-pad geometry → Three-Lobe Journal Bearing
+  - zero-preload 3-pad geometry → Three-Axial-Groove Bearing
 
 ---
 
-# Unified Journal-Bearing Solver Development
+## Tapered-Land Bearing
 
-## [v3.13] - Turbulence and Three-Lobe Update
+A dedicated tapered-land bearing module was then developed.
 
 ### Added
-- Constantinescu turbulence model
+- Circumferential tapered-land geometry
+- Trailing-land region
+- Optional axial side lands
+- Piecewise film-thickness definition
+- Dedicated pressure-field solution
+- Force, flow and power post-processing
+- Dynamic coefficient calculation
+
+### Improved
+- Transition between tapered and land regions
+- Geometry masks
+- Boundary-condition handling
+- Integration of the module into the unified RotorDynX interface
+
+---
+
+## Pressure-Dam Bearing
+
+The pressure-dam bearing was developed as an independent geometry rather than treating it as a minor modification of the plain bearing.
+
+### Added
+- Independent two-pad pressure-dam reconstruction
+- Constant-depth top-pad dam pocket
+- Axial side dams
+- Optional lower-pad relief track
+- CENTER and SIDE lower-relief configurations
+- Fixed-pressure relief boundaries
+- Dedicated leakage reporting
+- Static and dynamic calculations
+
+### Validation development
+The module progressed through multiple benchmark cases.
+
+Important development work included:
+
+- correction of the Case 2 K/C benchmark implementation
+- published-example verification
+- separate leakage-path reporting
+- progression through benchmark Cases 3, 4 and 5
+- review of relief-boundary treatment
+
+### Status
+The pressure-dam static and K/C implementation reached a working benchmark state, while individual benchmark assumptions continued to be reviewed against published definitions.
+
+---
+
+## Worn Bearing
+
+A dedicated worn-bearing family was then introduced.
+
+### Initial implementation
+The first worn-bearing implementation used a constant-depth worn pocket.
+
+### [v3.22]
+- Added published worn-pocket benchmark case
+- Independent two-axial-groove worn-bearing family
+- Added worn-region geometry handling
+- Integrated static and dynamic analysis into the unified solver
+
+### [v3.23]
+The worn geometry was revised from the earlier constant-depth approximation to a smooth circular worn arc.
+
+### Added / corrected
+- Circular-arc wear profile derived from wear depth and wear arc
+- Removal of the previous constant-depth wear step
+- Smoother film-thickness transition
+- Published Section 3.8 benchmark implementation
+- Improved dynamic sensitivity treatment
+
+### Dynamic improvements
+- Exact low-Re laminar recovery
+- Turbulent-mobility derivative included in the perturbed-Reynolds K/C formulation
+
+---
+
+# Core Solver Development
+
+## [v3.12] - Direct Perturbed-Reynolds Dynamic Coefficients
+
+A major solver change was made when RotorDynX moved from repeated nonlinear finite-difference perturbation toward a direct linearized Reynolds formulation.
+
+### Added
+- Direct perturbed-Reynolds K/C solver
+- Sparse dynamic pressure-sensitivity equations
+- Four journal perturbation sensitivity solutions
+- Common Reynolds operator
+- Cached matrix/factorization
+- Frozen equilibrium viscosity during perturbation
+- Frozen cavitation active region during first-order perturbation
+
+### Retained
+- Finite-difference K/C calculation as an independent QA method
+
+### Performance
+Representative direct dynamic calculations were reduced to approximately:
+
+`0.18 - 0.26 s`
+
+during development cases.
+
+### Improved
+- Repeatability of K/C extraction
+- Separation between equilibrium and perturbation calculations
+- Dynamic solver speed
+- Numerical consistency
+
+---
+
+## [v3.13] - Turbulence and Bearing Classification Update
+
+### Added
+- Constantinescu turbulence formulation
 - Reynolds-number-dependent circumferential mobility
 - Reynolds-number-dependent axial mobility
 - Turbulence correction in Couette shear
-- Direct-perturbation updates for turbulence-enabled cases
-
-### Improved
-- Consistency between static and dynamic turbulent-film treatment
-- Hydrodynamic mobility evaluation
-- Shear and power-loss treatment under turbulent conditions
+- Turbulence-compatible perturbed-Reynolds treatment
 
 ### Fixed
-- Corrected Three-Lobe bearing naming in the unified solver
+- Three-lobe / three-axial-groove classification
 
-### Benchmark result
-A reference case produced approximately:
+### Reference development case
+A representative three-lobe calculation produced approximately:
 
 - eccentricity ratio: 0.253
 - attitude angle: 29.2 deg
 - maximum pressure: 6.78 MPa
 - flow: 7.63 L/min
 
-These values were used as an internal comparison point during development.
+These values were retained as an internal development reference rather than a universal benchmark.
 
 ---
 
-## [v3.12] - Direct Perturbed-Reynolds K/C
+# Tilting-Pad Journal Bearing Development
+
+The TPJB solver was developed as a separate bearing engine because the pad rotational equilibrium and dynamic condensation require a different numerical structure from fixed-geometry bearings.
+
+---
+
+## [TPJB v0.2] - Initial TPJB Framework
 
 ### Added
-- Direct perturbed-Reynolds method as the default first-order dynamic-coefficient solver
-- Sparse linear system for dynamic pressure sensitivities
-- Four pressure-sensitivity solutions from a common Reynolds operator
-- Cached matrix/factorization workflow
-- Frozen equilibrium viscosity during perturbation
-- Frozen cavitation active set during perturbation
+- Multi-pad TPJB geometry
+- Pad leading edge, pivot and trailing edge definition
+- Pad preload
+- Pivot offset
+- Individual pad Reynolds solution
+- Initial pad tilt calculation
+- Initial TPJB result structures
 
-### Retained
-- Finite-difference K/C calculation for QA and independent checking
+---
 
-### Performance
-- Direct K/C solution reduced dynamic coefficient computation to approximately 0.18-0.26 s for representative cases during development
+## [TPJB v0.3 - v0.6] - Pad Equilibrium Development
+
+### Added
+- Individual pad load calculation
+- Pad pressure fields
+- Pad moment integration
+- Journal force summation
+- Initial nested journal/pad equilibrium
 
 ### Improved
-- Separation between equilibrium solution and dynamic linearization
-- Repeatability of dynamic coefficient extraction
-- Numerical efficiency compared with repeated nonlinear perturbation solves
+- Loaded-pad root selection
+- Pad initialization
+- Pad indexing
+- Static convergence behavior
+
+### Fixed
+- Struct initialization issues
+- Selection of non-trivial pad equilibrium roots
+- Idle and lightly-loaded pad root behavior
 
 ---
 
-# Earlier Unified-Solver Milestones
+## [TPJB v0.7] - Power Integration Correction
 
-Before the v3.12/v3.13 milestones, RotorDynX was progressively expanded into a unified hydrodynamic-bearing framework.
+### Fixed
+- TPJB friction-power calculation
 
-### Bearing geometry support developed
-- Plain journal bearing
-- Elliptical / two-lobe bearing
-- Three-lobe bearing
-- Three-axial-groove bearing
-- Tapered-land bearing
-- Pressure-dam bearing
-- Worn-bearing geometry
-- Tilting-pad journal bearing
+The earlier implementation was replaced by full two-dimensional trapezoidal wall-shear integration over the pad surface.
 
-### Core solver capabilities developed
-- Finite-difference Reynolds equation solution
-- Sparse matrix assembly
-- Journal static equilibrium
-- Load and attitude-angle calculation
-- Pressure-field solution
-- Minimum film thickness
-- Maximum pressure
-- Oil-film reaction forces
-- Friction and power loss
-- Flow calculation
-- Dimensionless bearing parameters
-- Speed and operating-condition studies
-- Dynamic stiffness and damping extraction
-- Isothermal analysis
-- Thermal-result framework
-- Cavitation-region handling
-- Unified reporting and plotting
+This removed an inconsistency in the earlier power calculation.
 
 ---
 
-# Numerical and Solver Improvements
+## [TPJB v0.8 - v0.9A] - Strict Static Equilibrium
 
-Across the project, the following solver improvements were introduced progressively:
+### Improved
+- Journal force convergence
+- Individual pad moment convergence
+- Active-pad logic
+- Pad-root search robustness
 
-### Reynolds solver
-- Sparse matrix formulation
-- Reuse of matrix structure where possible
-- Improved boundary-condition handling
-- Positive-pressure-region treatment
-- Separation of geometry, operating point, and numerical settings
+### [v0.9A]
+Introduced a stricter nested equilibrium requirement:
 
-### Static equilibrium
-- Improved journal-position iteration
-- Better residual normalization
-- More robust convergence reporting
-- Nested TPJB journal/pad equilibrium
+- journal force equilibrium
+- individual pad moment equilibrium
+- tighter convergence reporting
 
-### Dynamic coefficients
-- Finite-difference coefficient extraction used during early validation
-- Direct perturbed-Reynolds formulation introduced
-- Common operator/factorization reuse
-- Pad-DOF condensation for TPJBs
-- Cross-coupled and direct coefficient reporting
-- Conditioning checks for condensed pad matrices
+This became the basis for the production static TPJB solver.
 
-### Post-processing
-- Consistent SI-unit reporting
-- Dimensionless stiffness and damping
-- Performance summaries
-- Computation-time breakdown
-- Unified result structure
-- Cleaner production-console output
+---
+
+## [TPJB v0.11] - Direct Perturbed-Reynolds TPJB Dynamics
+
+### Added
+- Direct dynamic pressure sensitivities for TPJBs
+- Journal displacement perturbations
+- Journal velocity perturbations
+- Reuse of the steady Reynolds operator
+- Dynamic pad-force and moment sensitivities
+
+This replaced repeated full nonlinear perturbation runs for production dynamic calculations.
+
+---
+
+## [TPJB v0.12] - Coupled Massless-Pad K/C Condensation
+
+### Added
+- Coupled journal/pad dynamic formulation
+- Massless-pad condensation
+- Pad rotational stiffness coupling
+- Pad rotational damping coupling
+- Equivalent journal 2 × 2 stiffness matrix
+- Equivalent journal 2 × 2 damping matrix
+
+This allowed the TPJB to be represented directly in rotor-bearing dynamic models.
+
+---
+
+## [TPJB v1.1] - Production TPJB Solver
+
+### Added
+- Production workflow
+- Unified static, performance and dynamic result structure
+- Production mesh settings
+- Improved runtime reporting
+- Dimensionless TPJB results
+- Improved console output
+- Robust active-pad detection
+
+### Improved
+- Warm-started pad-root searches
+- Full-scan fallback
+- Static and dynamic workflow separation
+- Dynamic cache construction
+- Result consistency checks
+
+---
+
+## [TPJB v1.1A] - Dimensionless Result Correction
+
+### Improved
+- Dimensionless coefficient reporting
+- Dimensionless stiffness normalization
+- Dimensionless damping normalization
+- Output consistency
+
+---
+
+## [TPJB v1.2] - Faster TPJB Dynamic Solver
+
+### Improved
+- Cached dynamic Reynolds operator/factorization
+- Reduced repeated matrix construction
+- Faster direct K/C sensitivity calculations
+- More efficient production workflow
+
+---
+
+## [TPJB v1.3] - Faster Static Equilibrium
+
+### Improved
+- Warm-started static pad roots
+- Local pad-root tracking
+- Full-scan fallback only when required
+- Reduced static-equilibrium runtime
+- Better production solver diagnostics
+
+---
+
+## [TPJB v1.4] - Spherical-Pivot TPJB
+
+### Added
+- Spherical-pivot formulation
+- Two rotational pad degrees of freedom:
+  - circumferential tilt
+  - axial tilt
+- Static circumferential moment condition
+- Static axial moment condition
+- Coupled `alpha + beta` dynamic pad coordinates
+- Spherical-pivot dynamic condensation
+
+### Production static conditions
+For every active pad:
+
+`M_circ = 0`
+
+and
+
+`M_axial = 0`
+
+while the journal satisfies the applied bearing-load equilibrium.
+
+### Dynamic solver
+- Direct perturbed Reynolds
+- Coupled massless-pad K/C condensation
+- Cached operator/factorization
+- Frozen steady positive-pressure region
+- Matrix conditioning checks
+
+### Added output
+- Circumferential pad tilt
+- Axial pad tilt
+- Circumferential pad moment
+- Axial pad moment
+- Pivot film thickness
+- Dynamic matrix conditioning
+- Direct/cross coefficient ratios
+- Detailed TPJB computation timing
+
+### Current status
+- Static spherical-pivot implementation: operational
+- Dynamic spherical-pivot implementation: operational
+- External K/C benchmark validation: in progress
+
+---
+
+# Current Bearing Families
+
+RotorDynX currently contains the following bearing families:
+
+| Bearing family | Geometry model | Static | Dynamic K/C |
+|---|---|---:|---:|
+| Plain journal | Fixed geometry | Yes | Yes |
+| Elliptical / two-lobe | FixedLobe | Yes | Yes |
+| Three-lobe | FixedLobe | Yes | Yes |
+| Three-axial-groove | FixedLobe, zero preload | Yes | Yes |
+| Tapered-land | Dedicated geometry | Yes | Yes |
+| Pressure-dam | Dedicated geometry | Yes | Yes |
+| Worn bearing | Dedicated worn geometry | Yes | Yes |
+| Tilting-pad journal bearing | Independent TPJB engine | Yes | Yes |
+| Spherical-pivot TPJB | TPJB with 2 pad rotational DOF | Yes | Under external validation |
 
 ---
 
 # Validation Philosophy
 
-RotorDynX validation does not rely on a single external program.
+RotorDynX validation is based on several independent checks rather than agreement with a single software package.
 
-The current validation approach includes:
+The validation process includes:
 
 - force-equilibrium checks
 - pad-moment equilibrium checks
 - mesh-convergence studies
 - dimensional consistency
 - dimensionless consistency
-- finite-difference verification of direct K/C calculations
+- finite-difference verification
+- direct perturbed-Reynolds comparison
 - published benchmark cases
 - comparison with independent engineering tools
-- comparison with commercial rotordynamic software where assumptions are known
+- comparison with commercial bearing/rotordynamic software where model assumptions are known
 
-Differences between two bearing programs are investigated before being treated as errors because results may depend on:
+Before comparing two bearing programs, the following definitions must be checked:
 
-- clearance convention
+- radial or diametral clearance
+- assembled or machined clearance
 - preload convention
-- pivot definition
+- pad/lobe indexing
 - load-angle convention
+- pivot convention
 - cavitation treatment
 - viscosity model
-- turbulence treatment
+- turbulence model
+- pressure boundary conditions
 - active-pad treatment
-- coordinate system
-- perturbation convention
-- coefficient sign convention
+- coordinate convention
+- K/C sign convention
 - dimensional normalization
-
----
-
-# Current Project Status
-
-| Module | Status |
-|---|---|
-| Unified journal-bearing solver | Operational |
-| Static equilibrium | Operational |
-| Pressure-field solution | Operational |
-| Performance calculations | Operational |
-| Direct perturbed-Reynolds K/C | Operational |
-| Constantinescu turbulence | Implemented |
-| TPJB static solver | Operational |
-| TPJB pad-moment equilibrium | Operational |
-| TPJB massless-pad K/C condensation | Implemented |
-| Spherical-pivot TPJB static model | Operational |
-| Spherical-pivot TPJB dynamic model | Implemented |
-| External spherical-pivot K/C validation | In progress |
-| Independent TPJB finite-difference K/C verification | In progress |
 
 ---
 
 ## Versioning note
 
-RotorDynX was developed rapidly during the research and validation stage, and not every intermediate code revision was released as a formal Git tag. This changelog therefore records confirmed engineering milestones rather than inventing release dates for historical revisions.
+RotorDynX was developed rapidly and many intermediate solver revisions were engineering development builds rather than formal public releases.
+
+This changelog therefore records known numerical and bearing-development milestones without assigning dates or release numbers that were not formally used.
